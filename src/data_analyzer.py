@@ -2,10 +2,11 @@ import networkx as nx
 import pandas as pd
 import matplotlib.pyplot as plt
 
-
 class DataVisualize:
     '''
     Class to visualize the data for sanity and curiosity 
+    Only use if analyzing online datasets. Don't need
+    when analyzing personal randomally generated graphs.
     '''
     def __init__(self, filepath):
         '''
@@ -25,7 +26,7 @@ class DataVisualize:
     #     plt.show()
 
 if __name__ == "__main__":
-    filepath = "/Users/shayansadeghieh/Downloads/facebook_clean_data/company_edges.csv"
+    # filepath = "/Users/shayansadeghieh/Downloads/facebook_clean_data/company_edges.csv"
     data = DataVisualize(filepath)
     graph = data.graph_properties()
     
