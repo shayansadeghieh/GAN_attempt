@@ -37,18 +37,13 @@ class DiscriminatorLSTMCell(rnn_cell_impl.RNNCell):
       CudnnCompatibleLSTMCell instead.
     """
         super(DiscriminatorLSTMCell, self).__init__()
-        self.num_units = num_units
-        self.num_inputs = num_inputs
-        self.activation = activation
-        self.num_outputs = num_outputs
-        
-    self._num_units = num_units
-    self._activation = activation or math_ops.tanh
-    self._linear = None
 
-    #Required because it RNNCell is parent and 
+        self._num_units = num_units
+        self._activation = activation or math_ops.tanh
+        self._linear = None
+
+    #Required because RNNCell is parent and 
     # is an abstract class. However, could be unused. 
-    #DON'T KNOW YET!! 
     @property
     def state_size(self):
         return self._num_units
