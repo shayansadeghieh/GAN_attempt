@@ -6,31 +6,32 @@ import numpy as np
 class DiscriminatorLSTMCell(rnn_cell_impl.BasicLSTMCell):
     def __init__(self, 
                 num_units, 
-                forget_bias,
+                num_inputs
                 activation,
-                reuse,
+                reuse = False,
                 name,
                 dtype,
                 **kwargs
                 ):
         '''
         Args:
-        num_units: int, The number of units in the LSTM cell. 
-        forget_bias: We add forget_bias (default: 1) to the 
-        biases of the forget gate in order to reduce the scale of 
-        forgetting in the beginning of the training. 
-        state_is_tuple:	If True, accepted and returned states are 
-        2-tuples of the c_state and m_state. If False, they are 
-        concatenated along the column axis. The latter behavior will soon be 
-        deprecated.
-        activation: Activation function of the inner states. Default: tanh
-        reuse: (optional) Python boolean describing whether to reuse variables 
-        in an existing scope.
-        name: String, the name of the layer. Layers with the same name 
-        will share weights, but to avoid mistakes we require reuse=True 
-        in such cases.
-        dtype: Default dtype of the layer 
-        **kwargs: Dict, keyword named properties for common layer attributes
+        num_units: int, the number of units in the LSTM cell. 
+        num_inputs: int, the number of inputs into the LSTM cell.
+
+
         '''
-    super(DiscriminatorLSTMCell, self).__init__()
+        super(DiscriminatorLSTMCell, self).__init__()
+        self.num_units = num_units
+        self.num_inputs = num_inputs
+        self.activation = activation
+        
+    
+    # if reuse == False:
+    #     self.w = self.BuildInputWeights()
+    
+    def BuildInputWeights(self):
+        pass 
+
+
+
     
