@@ -10,16 +10,8 @@ class DiscriminatorLSTMCell(rnn_cell_impl.RNNCell):
 
     The implementation is based on: http://arxiv.org/abs/1409.2329.
     '''
-    def __init__(self, 
-                num_units, 
-                num_inputs,
-                num_outputs,
-                activation,
-                reuse = False,
-                name = None,
-                dtype = None,
-                **kwargs
-                ):
+  def __init__(self, num_units, forget_bias=1.0,
+               state_is_tuple=True, activation=None, reuse=None):
     """Initialize the basic LSTM cell.
     Args:
       num_units: int, The number of units in the LSTM cell.
@@ -39,6 +31,8 @@ class DiscriminatorLSTMCell(rnn_cell_impl.RNNCell):
         super(DiscriminatorLSTMCell, self).__init__()
 
         self._num_units = num_units
+        self._forget_bias = forget_bias
+        self._state_is_tuple = state_is_tuple
         self._activation = activation or math_ops.tanh
         self._linear = None
 
@@ -50,7 +44,21 @@ class DiscriminatorLSTMCell(rnn_cell_impl.RNNCell):
 
     @property
     def output_size(self):
-        return self._num_units
+        return self._num_units 
+    
+    def call(self, inputs, state):
+        """Long short-term memory cell (LSTM).
+        Args:
+        inputs: `2-D` tensor with shape `[batch_size x input_size]`.
+        state: An `LSTMStateTuple` of state tensors, each shaped
+            `[batch_size x self.state_size]`, if `state_is_tuple` has been set to
+            `True`.  Otherwise, a `Tensor` shaped
+            `[batch_size x 2 * self.state_size]`.
+        Returns:
+        A pair containing the new hidden state, and the new state (either a
+            `LSTMStateTuple` or a concatenated state, depending on
+            `state_is_tuple`).
+        """
 
 
     
