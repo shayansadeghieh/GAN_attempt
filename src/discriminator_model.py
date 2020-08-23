@@ -1,9 +1,12 @@
 import tensorflow.compat.v1 as tf
-from tensorflow.compat.v1.python.ops import rnn_cell_impl
-from tensorflow.compat.v1.python.ops import math_ops
-from tensorflow.compat.v1.python.ops import array_ops
+from tensorflow.python.ops import rnn_cell_impl
+from tensorflow.python.ops import math_ops
+from tensorflow.python.ops import array_ops
 import pandas as pd
 import numpy as np
+
+#Import custom classes 
+from linear_class import _Linear
 
 class DiscriminatorLSTMCell(rnn_cell_impl.RNNCell):
     '''
@@ -67,10 +70,15 @@ class DiscriminatorLSTMCell(rnn_cell_impl.RNNCell):
             c, h = state
         else:
             c, h = array_ops.split(value=state, num_or_size_splits=2, axis=1)
+
         sigmoid = math_ops.sigmoid
+
+        if self._linear is None:
+            self._linear = _Linear([inputs, h], 4 * self._num_units, True)
 
 
 if __name__ == "__main__":
+    discriminator_tester = DiscriminatorLSTMCell(10)
 
     print('ran discriminator successfully')
 
