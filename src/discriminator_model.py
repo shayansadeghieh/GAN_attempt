@@ -1,5 +1,7 @@
 import tensorflow.compat.v1 as tf
 from tensorflow.compat.v1.python.ops import rnn_cell_impl
+from tensorflow.compat.v1.python.ops import math_ops
+from tensorflow.compat.v1.python.ops import array_ops
 import pandas as pd
 import numpy as np
 
@@ -10,25 +12,27 @@ class DiscriminatorLSTMCell(rnn_cell_impl.RNNCell):
 
     The implementation is based on: http://arxiv.org/abs/1409.2329.
     '''
-  def __init__(self, num_units, forget_bias=1.0,
-               state_is_tuple=True, activation=None, reuse=None):
-    """Initialize the basic LSTM cell.
-    Args:
-      num_units: int, The number of units in the LSTM cell.
-      forget_bias: float, The bias added to forget gates (see above).
-        Must set to `0.0` manually when restoring from CudnnLSTM-trained
-        checkpoints.
-      state_is_tuple: If True, accepted and returned states are 2-tuples of
-        the `c_state` and `m_state`.  If False, they are concatenated
-        along the column axis.  The latter behavior will soon be deprecated.
-      activation: Activation function of the inner states.  Default: `tanh`.
-      reuse: (optional) Python boolean describing whether to reuse variables
-        in an existing scope.  If not `True`, and the existing scope already has
-        the given variables, an error is raised.
-      When restoring from CudnnLSTM-trained checkpoints, must use
-      CudnnCompatibleLSTMCell instead.
-    """
+    def __init__(self, num_units, forget_bias=1.0, state_is_tuple=True, activation=None, reuse=None):
+        """Initialize the basic LSTM cell.
+        Args:
+        num_units: int, The number of units in the LSTM cell.
+        forget_bias: float, The bias added to forget gates (see above).
+            Must set to `0.0` manually when restoring from CudnnLSTM-trained
+            checkpoints.
+        state_is_tuple: If True, accepted and returned states are 2-tuples of
+            the `c_state` and `m_state`.  If False, they are concatenated
+            along the column axis.  The latter behavior will soon be deprecated.
+        activation: Activation function of the inner states.  Default: `tanh`.
+        reuse: (optional) Python boolean describing whether to reuse variables
+            in an existing scope.  If not `True`, and the existing scope already has
+            the given variables, an error is raised.
+        When restoring from CudnnLSTM-trained checkpoints, must use
+        CudnnCompatibleLSTMCell instead.
+        """
         super(DiscriminatorLSTMCell, self).__init__()
+        if not state_is_tuple:
+                logging.warn("%s: Using a concatenated state is slower and will soon be "
+                        "deprecated.  Use state_is_tuple=True.", self)
 
         self._num_units = num_units
         self._forget_bias = forget_bias
@@ -59,6 +63,16 @@ class DiscriminatorLSTMCell(rnn_cell_impl.RNNCell):
             `LSTMStateTuple` or a concatenated state, depending on
             `state_is_tuple`).
         """
+        if self._state_is_tuple:
+            c, h = state
+        else:
+            c, h = array_ops.split(value=state, num_or_size_splits=2, axis=1)
+        sigmoid = math_ops.sigmoid
+
+
+if __name__ == "__main__":
+
+    print('ran discriminator successfully')
 
 
     
